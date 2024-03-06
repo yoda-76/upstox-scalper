@@ -16,6 +16,7 @@ export default function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(form)
         try {
             const response = await fetch("http://localhost:4000/profile/login", {
                 method: 'POST',
@@ -28,7 +29,6 @@ export default function Login() {
                     password: form.password
                 })
             });
-    
             if (!response.ok) {
                 throw new Error('Failed to log in');
             }

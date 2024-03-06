@@ -16,9 +16,14 @@ if (!fs.existsSync(folderPath)) {
 
 const compressedFilePath = path.join(folderPath, 'instrument_data.csv.gz');
 const decompressedFilePath = path.join(folderPath, 'instrument_data.csv');
-const jsonFilePath = path.join(folderPath, 'instrument_data.json');
+const jsonFilePath = path.join(folderPath, 'options_data.json');
 const jsonFilePath2 = path.join(folderPath, 'instrument_keys_data.json');
-const jsonFilePath3 = path.join(folderPath, 'structured_data.json');
+const jsonFilePath3 = path.join(folderPath, 'structured_options_data.json');
+const jsonFilePath4 = path.join(folderPath, 'all_instrument_data.json');
+const jsonFilePath5 = path.join(folderPath, 'indexData.json');
+
+
+
 
 
 
@@ -52,17 +57,41 @@ axios({
     return csvtojson().fromFile(decompressedFilePath);
   })
   .then((jsonArray) => {
+    fs.writeFileSync(jsonFilePath4, JSON.stringify(jsonArray, null, 2));
 
-    jsonArray=jsonArray.filter(i=>{
-        if(i.instrument_type=="OPTIDX" && ["NIFTY","BANKNIFTY","FINNIFTY"].some(sub=>i.tradingsymbol.startsWith(sub))) return i
-    })
+    // const indexData=jsonArray.filter(i=> i.instrument_type=="INDEX" )
+    
 
     const structuredData={
+      "INDEX":{
+        "NIFTY": {},
+        "BANKNIFTY": {},
+        "FINNIFTY": {} 
+      },
       "BANKNIFTY": {},
       "FINNIFTY": {},
       "NIFTY": {}
     }
+
+    jsonArray=jsonArray.filter(i=>{
+      // if(i.name=="Nifty 50"){
+      //   structuredData.INDEX.NIFTY=i
+      // }
+      
+      // structuredData.INDEX.NIFTY = i.name === "Nifty 50" ? i : {};
+
+
+      if(i.name==="Nifty 50"){
+        structuredData.INDEX.NIFTY=i
+      }else if(i.name==="Nifty Bank"){
+        structuredData.INDEX.BANKNIFTY=i
+      }else if(i.name==="Nifty Fin Service"){
+        structuredData.INDEX.FINNIFTY=i
+      }
+      if(i.instrument_type=="OPTIDX" && ["NIFTY","BANKNIFTY","FINNIFTY"].some(sub=>i.tradingsymbol.startsWith(sub))) return i
+  })
     jsonArray.map(i=>{
+      // console.log(i)
       if(i.option_type==="CE"){
         const s1=i.tradingsymbol.substring(0,i.tradingsymbol.length-2)
         jsonArray.map(j=>{
@@ -90,13 +119,17 @@ axios({
       })
       }
     })
-    console.log(structuredData)
+    // console.log(structuredData)
     fs.writeFileSync(jsonFilePath3, JSON.stringify(structuredData, null, 2));
 
+
+    
     const jsonArray2=jsonArray.map(i=>{
         return i.instrument_key
     })
-    // Save JSON to file
+    for(const key in structuredData.INDEX){
+      jsonArray2.unshift(structuredData.INDEX[key].instrument_key);
+    }
     fs.writeFileSync(jsonFilePath2, JSON.stringify(jsonArray2, null, 2));
 
 

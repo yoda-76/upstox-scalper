@@ -69,6 +69,7 @@ router.post("/get-orderbook",async(req,res,next)=>{
 
 router.post("/place-order",async(req,res,next)=>{
     const {quantity, instrument_token,transaction_type}=req.body
+    console.log(quantity, instrument_token,transaction_type)
     const user=req.user
 
     try{
