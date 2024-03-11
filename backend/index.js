@@ -44,6 +44,11 @@ mongoose
 app.get("/test",(req,res)=>{
   res.send("ok")
 })
+app.get("/",(req,res)=>{
+  res.send("ok")
+})
+
+
 app.use("/", authRoute);
 app.use("/profile", profile);
 app.use("/console", tradingConsole);
