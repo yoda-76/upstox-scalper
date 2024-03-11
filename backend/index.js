@@ -35,13 +35,15 @@ mongoose
   app.use(cookieParser());
   app.use(express.json());
   app.use((req, res, next) => {
-    if (req.path.startsWith('/profile/login') || req.path.startsWith('/profile/signup') || req.path.startsWith('/auth')) {
+    if (req.path.startsWith('/test') || req.path.startsWith('/profile/login') || req.path.startsWith('/profile/signup') || req.path.startsWith('/auth')) {
       return next();
     }
     userVerification(req, res, next);
   });  
 
-
+app.get("/test",(req,res)=>{
+  res.send("ok")
+})
 app.use("/", authRoute);
 app.use("/profile", profile);
 app.use("/console", tradingConsole);

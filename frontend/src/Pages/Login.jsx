@@ -18,7 +18,7 @@ export default function Login() {
         e.preventDefault();
         console.log(form)
         try {
-            const response = await fetch("http://localhost:4000/profile/login", {
+            const response = await fetch("https://3.109.144.101/profile/login", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
