@@ -11,7 +11,9 @@ const profile = require("./Routes/profile");
 const tradingConsole = require("./Routes/tradingConsole");
 require("dotenv").config();
 
-const { MONGO_URL, PORT } = process.env; 
+// const { MONGO_URL, PORT } = process.env; 
+const MONGO_URL="mongodb+srv://yadvendras20:tZW8src3FyjGmfRx@cluster0.mhj1s0l.mongodb.net/?retryWrites=true&w=majority"
+const PORT=process.env.PORT || 8000
 
 mongoose
 .connect(MONGO_URL, {
